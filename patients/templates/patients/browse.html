@@ -1,0 +1,249 @@
+{% extends 'patients/layout.html' %}
+{% block title %}Список внесенных пациентов{% endblock %}
+
+{% block content %}
+  <section id="page-content" class="no-sidebar">
+    <div class="container">
+
+      <!-- оповещение -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="col-lg-6">
+            <div role="alert"
+               class="alert
+
+               {% if message.tags == 'success' %}
+                  alert-success
+               {% elif message.tags == 'info' %}
+                  alert-info
+               {% elif message.tags == 'warning' %}
+                  alert-warning
+               {% endif %}
+
+               alert-dismissible"
+            >
+              <button type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                      aria-label="Close"> </button>
+
+              <strong>
+                <i class="fa fa-check-circle"></i> Успешно!
+              </strong> {{ message }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="row mb-5">
+
+        <div class="col-lg-6">
+          <h4>Список пациентов ХОБЛ / ХНЗЛ</h4>
+          <p>
+            Всего пациентов: <b>{{ COPDPatients.count }}</b>
+            {% if current_url in request.path %}
+              , из них:<br>
+
+              {% for key, val in patients_status_counts.items %}
+                {{ key }}: <b>{{ val }}</b>;
+              {% endfor %}
+            {% endif %}
+          <p>
+        </div>
+
+        <form class="col-lg-6 patients__search-form float-right"
+              action="{% url 'patients:search' %}"
+              method="get"
+        >
+          <input class="form-control patients__search-input col-lg-6 text-end"
+                 name="patients_search"
+                 type="text"
+                 placeholder="Введите Фамилию или Имя для поиска..."
+          >
+          <span class="text-muted col-lg-6 text-end">
+            Введите запрос &amp; нажмите Enter для поиска
+          </span>
+        </form>
+
+        <div class="row">
+          <!-- control_buttons: begin -->
+          <div class="col-lg-12">
+            <div class="col-lg-6 text-end float-right">
+              <a href="{% url 'patients:add' %}" class="btn btn-light"><i class="icon-plus"></i> Добавить пациента</a>
+
+              <div class="p-dropdown ml-3 float-right">
+                <a class="title btn btn-light"><i class="icon-sliders"></i> Опции</a>
+
+                <div class="p-dropdown-content">
+                  <ul>
+                    {% if user.is_superuser %}
+                      <li><a href="{% url "admin:index" %}" target="_blank"><i class="icon-sliders"></i>Админ панель</a></li>
+                      <li><hr class="space"></li>
+                    {% endif %}
+
+                    <li><a href="{% url "patients:browse" %}"><i class="icon-refresh-cw"></i>Обновить БД</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- control_buttons: end -->
+
+          <!-- patients_list: begin -->
+          <table id="datatable" class="table table-bordered table-hover" style="width:100%">
+            <thead>
+              <tr>
+                <th><b>ID</b></th>
+                <th><b>ФИО</b></th> <!-- 2 -->
+                <th><b>Дата рождения</b></th> <!-- 3 -->
+                <th><b>Возраст</b></th> <!-- 4 -->
+
+                <th><b>Обращений</b></th> <!-- 10 -->
+                <th><b>Вакцинация</b></th> <!-- 13 -->
+                <th><b>Инвалидность</b></th> <!-- 8 -->
+
+                <th><b>Статус</b></th> <!-- 29 -->
+                <th><b>Действия</b></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for patient in COPDPatients %}
+                <tr>
+                  <td>{{ patient.id }}</td>
+                  <td>{{ patient.patronymic }} {{ patient.name }} {{ patient.surname }}</td>
+                  <td>{{ patient.birthday }}</td>
+                  <td>{{ patient.age }}</td>
+                  <td>{{ patient.requests_number_COPD }}</td>
+                  <td>{{ patient.get_vaccination_display }}</td>
+                  <td>{% if patient.disability %}Да{% else %}Нет{% endif %}</td>
+
+                  <td>
+                    {# bg-primary#}
+                    {# bg-secondary#}
+                    {# bg-danger#}
+                    {# bg-info#}
+                    {# bg-warning#}
+                    {# bg-success#}
+
+                    <span class="badge badge-pill
+                        {% if patient.dispensary_observation_status == "1" %}
+                          bg-warning
+                        {% elif patient.dispensary_observation_status == "2" %}
+                          bg-success
+                        {% elif patient.dispensary_observation_status == "3" %}
+                          bg-danger
+                        {% endif %}
+                    ">{{ patient.get_dispensary_observation_status_display }}</span>
+                  </td>
+
+                  <!-- control buttons: begin -->
+                  <td>
+                    <a class="ms-2 text-reset"
+                       href="{% url "patients:edit" patient.id %}"
+                       data-bs-toggle="tooltip"
+                       data-bs-original-title="Редактировать"
+                    >
+                      <i class="icon-edit"></i>
+                    </a>
+
+                    <a class="ms-2 text-reset"
+                       id="patient-view"
+                       href=""
+                       data-bs-target="#modal-{{ patient.id }}"
+                       data-bs-toggle="modal"
+                       data-bs-original-title="Просмотр"
+                    >
+                      <i class="icon-eye"></i>
+                    </a>
+
+                    {% if user.is_superuser %}
+                      <a class="ms-2 text-reset"
+                         href="{% url "patients:delete" patient.id %}"
+                         data-bs-toggle="tooltip"
+                         data-bs-original-title="Удалить"
+                      >
+                        <i class="icon-trash-2"></i>
+                      </a>
+                    {% endif %}
+                    <!-- control buttons: end -->
+                  </td>
+                </tr>
+
+                <!-- modal pre-view for current patient: begin -->
+                {% include 'patients/template_view.html' with patient=patient %}
+                <!-- modal pre-view for current patient: end -->
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- patients_list: end -->
+
+          <!-- paginator: begin -->
+          <nav>
+            <ul class="pagination justify-content-center">
+
+              <!-- назад -->
+              <li class="page-item {% if not COPDPatients.has_previous %} disabled {% endif %}">
+                <a class="page-link"
+                  href=" {% if COPDPatients.has_previous %}{% url 'patients:paginator' COPDPatients.previous_page_number %}{% else %}#{% endif %}"
+                  tabindex="-1" aria-disabled="true"
+                >
+                  <i class="fa fa-angle-left"></i>
+                </a>
+              </li>
+
+              {% if COPDPatients.number > 3 %}
+                <!-- всегда первая страница -->
+                <li class="page-item">
+                  <a class="page-link" href="{% url 'patients:paginator' 1 %}">1</a>
+                </li>
+
+                <!-- прочие страницы -->
+                <li class="page-item disabled">
+                  <span class="page-link">...</span>
+                </li>
+              {% endif %}
+
+              <!-- перебираем все страницы пагинации -->
+              {% for page in COPDPatients.paginator.page_range %}
+                <!-- текущая стр > текущая стр - 3 И текущ стр < текущ стр + 3, ТО... -->
+                {% if page > COPDPatients.number|add:'-3' and page < COPDPatients.number|add:'3' %}
+                  <li class="page-item {% if page == COPDPatients.number %} active {% endif %}">
+                    <a class="page-link" href="{% url 'patients:paginator' page %}">
+                      {{ page }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+
+              {% if COPDPatients.paginator.num_pages > COPDPatients.number|add:'3' %}
+                <!-- прочие страницы -->
+                <li class="page-item disabled">
+                  <span class="page-link">...</span>
+                </li>
+
+                <!-- всегда последняя страница -->
+                <li class="page-item">
+                  <a class="page-link" href="{% url 'patients:paginator' COPDPatients.paginator.num_pages %}">
+                    {{ COPDPatients.paginator.num_pages }}
+                  </a>
+                </li>
+              {% endif %}
+
+              <!-- вперед -->
+              <li class="page-item {% if not COPDPatients.has_next %} disabled {% endif %}">
+                <a class="page-link" href="{% if COPDPatients.has_next %}{% url 'patients:paginator' COPDPatients.next_page_number %}{% else %}#{% endif %}">
+                  <i class="fa fa-angle-right"></i>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+          <!-- paginator: end -->
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}

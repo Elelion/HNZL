@@ -1,0 +1,41 @@
+<div class="modal" id="modal-{{ patient.id }}" tabindex="-1" role="modal" aria-labelledby="modal-label-{{ patient.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="modal-label-{{ patient.id }}" class="modal-title">
+          ID: {{ patient.id }}
+        </h4>
+        <button aria-hidden="true" data-bs-dismiss="modal" class="btn-close modal__btn-close" type="button">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb20">
+          <div class="col-md-12">
+            <p>Сводка о пациенте:</p>
+            <p>{{ patient.patronymic }} {{ patient.name }} {{ patient.surname }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 xs-box">
+            <div class="box-services-a">
+              <h3>Данные пациента</h3>
+              <p>Адрес: {{ patient.address }}</p>
+              <p>Статус: {{ patient.get_dispensary_observation_status_display }}</p>
+              <p>Дата пост. на учет: {{ patient.consists_under_DN }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="box-services-a">
+              <h3>Медицинские данные</h3>
+              <p>Адрес: {{ patient.medical_organization_attachments }}</p>
+              <p>Год диагноза: {{ patient.year_of_diagnosis_of_COPD }}</p>
+              <p>Вакцинация: {{ patient.get_vaccination_display }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button data-bs-dismiss="modal" class="btn btn-b" type="button">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>

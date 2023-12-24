@@ -1,0 +1,194 @@
+{% extends 'patients/layout.html' %}
+{% block title %}Добавление пациента{% endblock %}
+
+{% block content %}
+  <section id="page-content">
+    <div class="container">
+      <div class="row">
+        <div class="content col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <span class="h4">Данные пациента</span>
+              <p class="text-muted">Добавить данные пациента для внесения в БД ХОБЛ / ХНЗЛ</p>
+            </div>
+            <div class="card-body">
+
+              {% if add_url in request.path %}
+                <form
+                  class="form-validate"
+                  action="{% url 'patients:add' %}"
+                  method="POST"
+                >
+              {% else %}
+                <form
+                  class="form-validate"
+                  action="{% url 'patients:edit' patient.id %}"
+                  method="POST"
+                >
+              {% endif %}
+
+                {% csrf_token %}
+
+                <div class="h5 mb-4"><b>Общие сведения</b></div>
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.patronymic.id_for_label }}">Фамилия</label>
+                    {{ form.patronymic }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.birthday.id_for_label }}">Дата рождения</label>
+                    {{ form.birthday }}
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.name.id_for_label }}">Имя</label>
+                    {{ form.name }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.age.id_for_label }}">Возраст</label>
+                    {{ form.age }}
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.surname.id_for_label }}">Отчество</label>
+                    {{ form.surname }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.address.id_for_label }}">Адрес</label>
+                    {{ form.address }}
+                  </div>
+                </div>
+
+                <div class="line"></div>
+                <div class="h5 mb-4"><b>Медицинские данные</b></div>
+
+                <div class="row">
+                  <div class="form-group col-md-6 input-group">
+                    <span class="input-group-text">Адрес</span>
+                    {{ form.medical_organization_attachments }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.year_of_diagnosis_of_COPD.id_for_label }}">Год установления диагноза	ХОБЛ</label>
+                    {{ form.year_of_diagnosis_of_COPD }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.hospitalization_with_year_with_ICD.id_for_label }}"> Госпитализации в течении 12 мес с кодом по МКБ</label>
+                    {{ form.hospitalization_with_year_with_ICD }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="col-lg-3">
+                      <label class="p-switch" for="{{ form.disability.id_for_label }}">Инвалидность</label>
+                        <label class="p-switch">
+                          {{ form.disability }}<span class="p-switch-style"></span>
+                        </label>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.requests_number_COPD.id_for_label }}">Кол-во обращений по поводу ХОБЛ за год</label>
+                    {{ form.requests_number_COPD }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.requests_number_COPD_with_aggravation.id_for_label }}">Кол-во обращений по поводу ХОБЛ за год - по поводу обострений</label>
+                    {{ form.requests_number_COPD_with_aggravation }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.outpatient_exacerbations.id_for_label }}">Лечение амбулаторных обострений</label>
+                    {{ form.outpatient_exacerbations }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.vaccination.id_for_label }}">Вакцинация против (гриппа, пневмококка)</label>
+                    {{ form.vaccination }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.FEV_FVC_after_bronchodilation.id_for_label }}">ОФВ/ФЖЕЛ после бронходилатации</label>
+                    {{ form.FEV_FVC_after_bronchodilation }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.OFV1_after_bronchodilation.id_for_label }}"> ОФВ1 после бронходилатации</label>
+                    {{ form.OFV1_after_bronchodilation }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.blood_eosinophils.id_for_label }}">Эозинофилы крови кл/мкл</label>
+                    {{ form.blood_eosinophils }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.saturation.id_for_label }}">Сатурация</label>
+                    {{ form.saturation }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.m_MRC.id_for_label }}">mMRC</label>
+                    {{ form.m_MRC }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.salbutamol.id_for_label }}">Коротко действующие бронходилататоры, кол-во ингаляторов год</label>
+                    {{ form.salbutamol }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.DDBA_DDAHP.id_for_label }}">ДДБА/ДДАХП</label>
+                    {{ form.DDBA_DDAHP }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.IGCS_DDBA.id_for_label }}">ИГКС/ДДБА указать МНН</label>
+                    {{ form.IGCS_DDBA }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.DDAHP.id_for_label }}">ДДАХП</label>
+                    {{ form.DDAHP }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.triple_fixed_combinations.id_for_label }}">Тройные фиксированные комбинации</label>
+                    {{ form.triple_fixed_combinations }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.sputum_sowing.id_for_label }}">Результат микробиологического анализа</label>
+                    {{ form.sputum_sowing }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.ICD.id_for_label }}">Сопутствующие заболевания: код МКБ</label>
+                    {{ form.ICD }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.consists_under_DN.id_for_label }}">Дата поступления на учет</label>
+                    {{ form.consists_under_DN }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.diseases_per_year.id_for_label }}">Исход заболевания за год</label>
+                    {{ form.diseases_per_year }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.cause_of_death.id_for_label }}">Непосредственная причина смерти</label>
+                    {{ form.cause_of_death }}
+                  </div>
+                </div>
+
+                <div class="line"></div>
+                <div class="h5 mb-4"><b>Статус пациента</b></div>
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.cause_of_death.id_for_label }}">Статус пациента</label>
+                    {{ form.dispensary_observation_status }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="{{ form.dispensary_observation_date_status.id_for_label }}">Дата статуса пациента</label>
+                    {{ form.dispensary_observation_date_status }}
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  {% if add_url in request.path %}
+                    <button type="submit" class="btn m-t-30 mt-3">Добавить</button>
+                  {% else %}
+                    <button type="submit" class="btn m-t-30 mt-3">Обновить</button>
+                  {% endif %}
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
