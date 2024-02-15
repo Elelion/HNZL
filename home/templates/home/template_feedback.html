@@ -1,0 +1,161 @@
+{% load static %}
+
+
+<div class="card">
+  <div class="card-body">
+    <form
+      class="form-validate"
+      action="{% url 'home:send_email_health_check' %}"
+      method="POST"
+      onsubmit="return checkClientFeedbackFormData();"
+    >
+      {% csrf_token %}
+
+      <h3>{{ form_feedback.title}}</h3>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form_feedback.name }}
+          </div>
+          <div class="form-group">
+            {{ form_feedback.surname }}
+          </div>
+          <div class="form-group">
+            {{ form_feedback.phone }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form_feedback.message }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="custom-control-label" for={{ form_feedback.terms_conditions.id_for_label }}>
+            {{ form_feedback.terms_conditions }}
+            Даю согласие на обработку
+            <a href="{% static 'docs/pers_dannyh.doc' %}"
+               target="_blank"
+               download
+            >
+              персональных данных
+            </a>
+          </label>
+        </div>
+
+        <!-- передаем ответы пользователя в форму -->
+        <input
+          type="hidden"
+          name="user_answers"
+          value="{% for key, value in user_answers.items %}
+            {{ key }}:{{ value }}{% if not forloop.last %},{% endif %}{% endfor %}"
+        >
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Отправить</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ** -->
+
+
+<!-- валидация инпутов перед отправкой формы -->
+<script>
+  function checkNameField(name) {
+    // Проверка на русские буквы в имени
+    let russianLettersPattern = /^[А-Яа-яЁё]+$/;
+
+    if (name.value.length < 2 || name.value.length > 20) {
+      name.style.border = '2px solid #fbca19';
+      return false;
+    } else {
+      name.style.border = '1px solid #ccc';
+    }
+
+    if (!russianLettersPattern.test(name.value)) {
+      name.style.border = '2px solid #fbca19';
+      return false;
+    } else {
+      name.style.border = '1px solid #ccc';
+    }
+
+    return true;
+  }
+
+  function checkPhoneField(phone) {
+    let inputValue = phone.value;
+
+    /**
+     * Паттерн для проверки формата:
+     *
+     * +7-123-456-78-90
+     * +7(123)-456-78-90
+     * +7-1234567890
+     * +71234567890
+     * 71234567890
+     * 7(123)456-78-90
+     */
+    let phonePattern = /^\+?[7][-\(]?\d{3}\)?-?\d{3}-?\d{2}-?\d{2}$/;
+
+    if (!phonePattern.test(inputValue)) {
+      phone.style.border = '2px solid #fbca19';
+      return false;
+    } else {
+      phone.style.border = '1px solid #ccc';
+    }
+
+    return true;
+  }
+
+  function checkClientFeedbackFormData() {
+    let name = document.getElementById('client_feedback_name');
+    let surname = document.getElementById('client_feedback_surname');
+    let phone = document.getElementById('client_feedback_phone');
+
+    if (checkNameField(name) === true
+      && checkNameField(surname) === true
+      && checkPhoneField(phone) === true) {
+      return true;
+    }
+
+    return false;
+  }
+</script>
+
+
+<!-- ** -->
+
+
+<!-- маска для номера телефона -->
+<script>
+  window.onload = function() {
+    initializeMaskedInput('client_feedback_phone');
+  };
+
+  function initializeMaskedInput(inputId) {
+    let inputElement = document.getElementById(inputId);
+
+    // Устанавливаем фокус в начало строки при фокусе на поле ввода
+    inputElement.addEventListener('click', function () {
+      selectText(inputElement);
+    });
+
+    MaskedInput({
+      elm: inputElement,
+      format: '+7(___)-___-__-__',
+      separator: '+7()-'
+    });
+  }
+
+  // Функция для выделения всего текста в поле ввода
+  function selectText(input) {
+    input.setSelectionRange(0, input.value.length);
+  }
+</script>

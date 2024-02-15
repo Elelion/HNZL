@@ -1,0 +1,32 @@
+{% extends 'home/layout.html' %}
+{% block title %}Результаты анкеты{% endblock %}
+
+{% block content %}
+
+  <!-- 500 PAGE -->
+  <section class="p-b-200">
+    <div class="container">
+      <div class="row p-t-200">
+        <div class="col-lg-6">
+          <div class="page-error-404 text-center">{{ icon_html|safe }}</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="text-start">
+            <h1 class="text-medium"> {{ message }} </h1>
+            <p class="lead">{{ sub_message }}</p>
+
+            <div class="seperator m-t-20 m-b-20"></div>
+
+            <a href="{% url 'home:index' %}"
+              class="btn btn-primary"
+              type="button"
+            >Главная
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end:  500 PAGE -->
+
+{% endblock content %}

@@ -1,0 +1,93 @@
+{% extends 'home/layout.html' %}
+{% block title %}Результаты анкеты{% endblock %}
+
+{% block content %}
+
+  <!-- Page Content -->
+  <section id="page-content">
+    <div class="container">
+      <div class="row">
+        <div class="content col-lg-12">
+
+          <!-- feedback: begin -->
+          {% include 'home/template_feedback.html' %}
+          <!-- feedback: end -->
+
+          <div class="line"></div>
+
+          <!-- result: begin -->
+          <div class="card">
+            <div class="card-body">
+              <h3 class="mb-5">Результаты <small>(оценки здоровья)</small></h3>
+
+              <div class="form-group col-md-6">
+                {% for key, val in user_answers.items %}
+                  <p>
+                    {{ key }}:
+                    <span class="client__processing-status badge badge-pill">
+                    {{ val }}
+                  </span>
+                  </p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- result: end -->
+
+        </div>
+
+        <!-- Sidebar-->
+        <div class="sidebar col-lg-3">
+          <div class="sidebar-menu">
+            {% if quest_number > 1 %}
+              <label>Пройдено</label>
+              <ul>
+                {% for number, text in questions %}
+                  {% if quest_number > number %}
+                    <li {% if number < quest_number %}style="text-decoration: line-through;"{% endif %}>
+                      {{ text }}
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% for number, text in questions %}
+              {% if quest_number == number %}
+                <label>Текущий вопрос: </label>
+                <ul>
+                  <li style="color: #0333e8; font-weight: bold;">
+                    {{ text }}
+                  </li>
+                </ul>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <!-- end: sidebar-->
+      </div>
+    </div>
+  </section>
+  <!-- end: Page Content -->
+
+
+  <!-- ** -->
+
+
+  <script>
+    let statusElements = document.querySelectorAll('.client__processing-status');
+
+    statusElements.forEach(function(statusElement) {
+      let statusText = statusElement.innerText;
+
+      if (statusText.includes('[Ок]')) {
+        statusElement.classList.add('bg-success');
+        statusElement.classList.remove('bg-danger');
+      } else {
+        statusElement.classList.add('bg-danger');
+        statusElement.classList.remove('bg-success');
+      }
+    });
+  </script>
+
+{% endblock content %}

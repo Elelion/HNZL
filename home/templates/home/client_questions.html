@@ -1,0 +1,163 @@
+{% extends 'home/layout.html' %}
+{% block title %}Анкета для пациента{% endblock %}
+
+{% block content %}
+  <!-- Page Content -->
+  <section id="page-content">
+    <div class="container">
+      <div class="row">
+        <div class="content col-lg-9">
+
+          <!-- questions: begin -->
+          {% if quest_number <= questions|length %}
+            <div class="card">
+              <div class="card-body">
+                <h3 class="mb-5">Анкета для пациента <small>(выявление ХОБЛ / ИБС)</small></h3>
+
+                <form
+                  class="form-validate"
+                  action="{% url 'home:client_questions' %}"
+                  method="POST"
+                >
+                  {% csrf_token %}
+
+                  <div class="h5 mb-4">{{ form.question_title }} - {{ quest_number }} из {{ questions|length }}</div>
+
+                  <!-- quests: begin -->
+                  <div class="row">
+                    {% if quest_number == 1 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form1_height.id_for_label }}">Рост</label>
+                        {{ form.form1_height }}
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form1_weight.id_for_label }}">Масса тела</label>
+                        {{ form.form1_weight }}
+                      </div>
+
+                    {% elif quest_number == 2 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form2_max.id_for_label }}">Максимальное давление</label>
+                        {{ form.form2_max }}
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form2_min.id_for_label }}">Минимальное давление</label>
+                        {{ form.form2_min }}
+                      </div>
+
+                    {% elif quest_number == 3 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form3_cholesterol.id_for_label }}">Индекс холестирина</label>
+                        {{ form.form3_cholesterol }}
+                      </div>
+
+                    {% elif quest_number == 4 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form4_glucose.id_for_label }}">Показания глюкозы</label>
+                        {{ form.form4_glucose }}
+                      </div>
+
+                    {% elif quest_number == 5 %}
+                    <div class="form-group col-md-6">
+                      <label for="{{ form.form5_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                      {{ form.form5_date_of_the_last_visit }}
+                    </div>
+
+                    {% elif quest_number == 6 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form6_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form6_date_of_the_last_visit }}
+                      </div>
+
+                    {% elif quest_number == 7 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form7_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form7_date_of_the_last_visit }}
+                      </div>
+
+                    {% elif quest_number == 8 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form8_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form8_date_of_the_last_visit }}
+                      </div>
+
+                    {% elif quest_number == 9 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form9_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form9_date_of_the_last_visit }}
+                      </div>
+
+                    {% elif quest_number == 10 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form10_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form10_date_of_the_last_visit }}
+                      </div>
+
+                    {% elif quest_number == 11 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form11_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form11_date_of_the_last_visit }}
+                      </div>
+
+                    {% elif quest_number == 12 %}
+                      <div class="form-group col-md-6">
+                        <label for="{{ form.form12_date_of_the_last_visit.id_for_label }}">Дата, последнего посещения врача по данному заболеванию</label>
+                        {{ form.form12_date_of_the_last_visit }}
+                      </div>
+                    {% endif %}
+
+                    <div class="form-group col-md-6">
+                      {# скрытое поле, с кникальным id вопроса #}
+                      {{ form.quest_number }}
+                    </div>
+                  </div>
+                  <!-- quests: end -->
+
+                  <button type="submit" class="btn m-t-30 mt-3">Далее</button>
+                </form>
+              </div>
+            </div>
+          {% endif %}
+          <!-- questions: end -->
+
+        </div>
+
+        <!-- Sidebar-->
+        <div class="sidebar col-lg-3">
+          <div class="sidebar-menu">
+            {% if quest_number > 1 %}
+              <label>Пройдено</label>
+              <ul>
+                {% for number, text in questions %}
+                  {% if quest_number > number %}
+                    <li {% if number < quest_number %}style="text-decoration: line-through;"{% endif %}>
+                      {{ text }}
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% for number, text in questions %}
+              {% if quest_number == number %}
+                <label>Текущий вопрос: </label>
+                <ul>
+                  <li style="color: #0333e8; font-weight: bold;">
+                    {{ text }}
+                  </li>
+                </ul>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <!-- end: sidebar-->
+      </div>
+    </div>
+  </section>
+  <!-- end: Page Content -->
+
+
+  <!-- ** -->
+
+
+{% endblock content %}

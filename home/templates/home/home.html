@@ -1,0 +1,450 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+  <!-- Inspiro Slider -->
+  <div id="slider"
+       class="inspiro-slider slider-fullscreen dots-creative"
+       data-height-xs="360"
+       data-autoplay="8000"
+       data-animate-in="fadeIn"
+       data-animate-out="fadeOut"
+       data-items="1"
+       data-loop="true"
+       data-autoplay="true"
+  >
+
+    <!-- Slide 1 -->
+      <div class="slide" style="background-image: url('{% static 'home/images/slider-1.jpeg' %}');">
+      <div class="bg-overlay"></div>
+      <div class="container">
+        <div class="slide-captions text-center">
+          <img src="{% static 'home/images/slider-1-ico.png' %}" width="32" height="32" alt="" class="center">
+          <h2 class="text-lg text-light no-margin text-uppercase">ХОБЛ</h2>
+          <h2 class="text-medium  text-light no-margin text-uppercase"></h2>
+          <h3 class="font-cedarville text-light">
+            хроническая обструктивная болезнь легких
+          </h3>
+          <a class="btn btn-outline btn-light" href="{% url 'home:client_questions' %}">Пройти тест</a>
+        </div>
+      </div>
+    </div>
+    <!-- end: Slide 1 -->
+
+    <!-- Slide 2 -->
+    <!--
+    <div class="slide" style="background-image: url('{% static 'home/images/slider-2.jpg' %}');">
+      <div class="bg-overlay"></div>
+      <div class="container">
+        <div class="slide-captions text-center">
+          <img src="{% static 'home/images/slider-2-ico.png' %}" width="32" height="32" alt="" class="center">
+          <h2 class="text-lg text-light no-margin text-uppercase">Здоровье</h2>
+          <h2 class="text-medium  text-light no-margin text-uppercase">Полезная информация</h2>
+          <h3 class="font-cedarville text-light">
+            забота о своем здоровье - продлевает жизнь
+          </h3>
+          <a class="btn btn-outline btn-light" href="http://themeforest.net/item/polo-responsive-multipurpose-html5-template/13708923">Подробнее</a>
+        </div>
+      </div>
+    </div>
+    -->
+    <!-- end: Slide 2 -->
+
+  </div>
+  <!--end: Inspiro Slider -->
+
+  <!-- WHAT WE DO -->
+  <section id="section1" class="background-grey">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3">
+          <div class="heading-text heading-section">
+            <h2>НАШИ<br/>СОБЫТИЯ</h2>
+          </div>
+        </div>
+
+        <div class="col-lg-9">
+          <div class="row">
+            <div data-animate-delay="300" data-animate="fadeInUp" class="col-lg-6 animated fadeInUp visible">
+              <p>
+                23 января прошла профилактическая акция в библиотеке"Социальная"в рамках диспансеризации и профосмотра на рабочем месте.
+              </p>
+            </div>
+
+            <div data-animate-delay="600" data-animate="fadeInUp" class="col-lg-6 animated fadeInUp visible">
+              <p>
+                Консультативный приём провели специалисты нашего Центра здоровья , были предусмотрены забор анализов, в том числе мазков на онкоцитологию, проведение ЭКГ, контрольное измерение давления. Наша мобильная бригада с прошлого года практикует такие выездные акции. в учреждениях города и области. Обследование прошли не только сотрудники библиотеки, но и посетители.
+                <br>
+                <br>
+                А вы прошли диспансеризацию?
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- END WHAT WE DO -->
+
+  <!-- GALLERY -->
+  <section id="section2" class="no-padding">
+    <!-- Portfolio -->
+    <div id="portfolio" class="grid-layout portfolio-3-columns" data-margin="0">
+
+      {% for i in portfolio_numbers %}
+        <div class="portfolio-item img-zoom ct-photography ct-media ct-branding ct-Media">
+          <div class="portfolio-item-wrap">
+            <div class="portfolio-image">
+              <a href="#">
+                <img src="{% static 'home/images/' %}{{ i }}" alt="">
+              </a>
+            </div>
+
+            <div class="portfolio-description">
+              <a title="{{ i }}"
+                 data-lightbox="image"
+                 href="{% static 'home/images/' %}{{ i }}"
+                 class="btn btn-light btn-roundeded"
+              >
+                Увеличить
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+    <!-- end: Portfolio -->
+  </section>
+  <!-- end: GALLERY -->
+
+  <!-- COUNTERS -->
+  <section id="section2-1" class="background-grey">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3">
+          <div class="text-center">
+            <div class="icon"><i class="fa fa-3x fa-user"></i></div>
+            <div class="counter">
+              <span data-speed="3000"
+                    data-refresh-interval="50"
+                    data-from="1"
+                    data-to="{{ COPDPatients.count }}"
+                    data-seperator="true">
+              </span>
+            </div>
+            <div class="seperator seperator-small"></div>
+            <p>ПАЦИЕНТОВ ПРИНЯТО</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3">
+          <div class="text-center">
+            <div class="icon"><i class="fa fa-3x fa-mail-bulk"></i></div>
+            <div class="counter">
+              <span data-speed="4500"
+                    data-refresh-interval="13"
+                    data-from="1"
+                    data-to="152"
+                    data-seperator="true">
+              </span>
+            </div>
+            <div class="seperator seperator-small"></div>
+            <p>ЗАЯВОК ПРИНЯТО</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3">
+          <div class="text-center">
+            <div class="icon"><i class="fa fa-3x fa-users"></i></div>
+            <div class="counter">
+              <span data-speed="3000"
+                    data-refresh-interval="4"
+                    data-from="1"
+                    data-to="28"
+                    data-seperator="true">
+              </span>
+            </div>
+            <div class="seperator seperator-small"></div>
+            <p>ПЕРСОНАЛ</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3">
+          <div class="text-center">
+            <div class="icon"><i class="fa fa-3x fa-hourglass"></i></div>
+            <div class="counter">
+              <span data-speed="2550"
+                    data-refresh-interval="50"
+                    data-from="1"
+                    data-to="6"
+                    data-seperator="true">
+              </span>
+            </div>
+            <div class="seperator seperator-small"></div>
+            <p>ЛЕТ РАБОТЫ</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- end: COUNTERS -->
+
+  <!-- PARALLAX -->
+  <section id="section2-2" class="text-center text-light p-t-150 p-b-150">
+{#  <section id="section2-2" data-bg-parallax="{% static 'home/images/1.jpg' %}" class="text-center text-light p-t-150 p-b-150">#}
+    <div class="container">
+      <div class="heading-text heading-section text-center m-b-40">
+        <h2>Мы на крате</h2>
+      </div>
+
+      <script
+        type="text/javascript"
+        charset="utf-8"
+        async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A4bc4b79d8d70dd60cc90b1cf2977af9b24d2b18914a1b8005959bb2bcebcb8e2&amp;width=100%25&amp;height=442&amp;lang=ru_RU&amp;scroll=false"
+      ></script>
+    </div>
+  </section>
+  <!-- end: COUNTERS -->
+
+  <!-- BLOG -->
+  <!--
+  <section id="section3" class="background-grey">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="heading-text heading-section">
+            <h2>OUR BLOG</h2>
+            <span class="lead">Pellentesque ipsum erat, facilisis ut venenatis eu, sodales vel dolor. The most happiest time of the day!. Morbi sagittis, sem quis lacinia faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo.
+                              </span>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <div id="blog" class="grid-layout post-2-columns m-b-30" data-margin="30" data-item="post-item">
+
+            <div class="post-item border">
+              <div class="post-item-wrap">
+                <div class="post-image">
+                  <a href="#">
+                    <img alt="" src="images/blog/12.jpg">
+                  </a>
+                  <span class="post-meta-category"><a href="">Lifestyle</a></span>
+                </div>
+                <div class="post-item-description">
+                  <span class="post-meta-date"><i class="fa fa-calendar-o"></i>Jan 21, 2017</span>
+                  <span class="post-meta-comments"><a href=""><i class="fa fa-comments-o"></i>33 Comments</a></span>
+                  <h2><a href="#">Standard post with a single image
+                  </a></h2>
+                  <p>Curabitur pulvinar euismod ante, ac sagittis ante posuere ac. Vivamus luctus commodo dolor porta feugiat. Fusce at velit id ligula pharetra laoreet.</p>
+
+                  <a href="#" class="item-link">Read More <i class="fa fa-arrow-right"></i></a>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </div>
+  </section>
+  -->
+  <!-- end: BLOG -->
+
+  <!-- TEAM -->
+  <!--
+  <section id="section4">
+    <div class="container">
+      <div class="heading">
+        <h2>MEET ARCHITECTS</h2>
+        <span class="lead">Lorem ipsum dolor sit amet, consecte adipiscing elit.</span>
+      </div>
+      <div class="row team-members">
+        <div class="col-lg-3">
+          <div class="team-member">
+            <div class="team-image">
+              <img src="images/team/6.jpg">
+            </div>
+            <div class="team-desc">
+              <h3>Alea Smith</h3>
+              <span>Software Developer</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing tristique hendrerit laoreet. </p>
+              <div class="align-center">
+                <a class="btn btn-xs btn-slide btn-light" href="#">
+                  <i class="fab fa-facebook-f"></i>
+                  <span>Facebook 111</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="100">
+                  <i class="fab fa-twitter"></i>
+                  <span>Twitter</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="118">
+                  <i class="fab fa-instagram"></i>
+                  <span>Instagram</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="mailto:#" data-width="80">
+                  <i class="far fa-envelope"></i>
+                  <span>Mail</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="team-member">
+            <div class="team-image">
+              <img src="images/team/7.jpg">
+            </div>
+            <div class="team-desc">
+              <h3>Ariol Doe</h3>
+              <span>Software Developer</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing tristique hendrerit laoreet. </p>
+              <div class="align-center">
+                <a class="btn btn-xs btn-slide btn-light" href="#">
+                  <i class="fab fa-facebook-f"></i>
+                  <span>Facebook 222</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="100">
+                  <i class="fab fa-twitter"></i>
+                  <span>Twitter</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="118">
+                  <i class="fab fa-instagram"></i>
+                  <span>Instagram</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="mailto:#" data-width="80">
+                  <i class="far fa-envelope"></i>
+                  <span>Mail</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="team-member">
+            <div class="team-image">
+              <img src="images/team/8.jpg">
+            </div>
+            <div class="team-desc">
+              <h3>Emma Ross</h3>
+              <span>Software Developer</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing tristique hendrerit laoreet. </p>
+              <div class="align-center">
+                <a class="btn btn-xs btn-slide btn-light" href="#">
+                  <i class="fab fa-facebook-f"></i>
+                  <span>Facebook 333</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="100">
+                  <i class="fab fa-twitter"></i>
+                  <span>Twitter</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="118">
+                  <i class="fab fa-instagram"></i>
+                  <span>Instagram</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="mailto:#" data-width="80">
+                  <i class="far fa-envelope"></i>
+                  <span>Mail</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="team-member">
+            <div class="team-image">
+              <img src="images/team/9.jpg">
+            </div>
+            <div class="team-desc">
+              <h3>Victor Loda</h3>
+              <span>Software Developer</span>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing tristique hendrerit laoreet. </p>
+              <div class="align-center">
+                <a class="btn btn-xs btn-slide btn-light" href="#">
+                  <i class="fab fa-facebook-f"></i>
+                  <span>Facebook 444</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="100">
+                  <i class="fab fa-twitter"></i>
+                  <span>Twitter</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="#" data-width="118">
+                  <i class="fab fa-instagram"></i>
+                  <span>Instagram</span>
+                </a>
+                <a class="btn btn-xs btn-slide btn-light" href="mailto:#" data-width="80">
+                  <i class="far fa-envelope"></i>
+                  <span>Mail</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  -->
+  <!-- end: TEAM -->
+
+  <!-- PORTALS -->
+  <section id="section5" class="background-grey p-b-100">
+    <div class="container">
+      <div class="heading-text heading-section text-center">
+        <h2>ГОС ПОРТАЛЫ</h2>
+        <span class="lead">Ссылки на государственные порталы</span>
+      </div>
+
+      <ul class="grid grid-5-columns">
+        <li>
+          <a href="https://www.gosuslugi.ru" target="_blank">
+            <img
+              class="gos-portal__ico"
+              alt="Государственные услуги"
+              title="Государственные услуги"
+              src="{% static 'home/images/gos-gosuslugi.png' %}">
+          </a>
+        </li>
+        <li>
+          <a href="https://липецкаяобласть.рф" target="_blank">
+            <img
+              class="gos-portal__ico"
+              alt="Администрация Липецкой области"
+              title="Администрация Липецкой области"
+              src="{% static 'home/images/gos-lip-gov.png' %}">
+          </a>
+        </li>
+        <li>
+          <a href="https://minzdrav.gov.ru" target="_blank">
+            <img
+              class="gos-portal__ico"
+              alt="Министерство здравоохранения РФ"
+              title="Министерство здравоохранения РФ"
+              src="{% static 'home/images/gos-med-ru.png' %}">
+          </a>
+        </li>
+        <li>
+          <a href="http://uzalo48.lipetsk.ru/node/11509" target="_blank">
+            <img
+              class="gos-portal__ico"
+              alt="Информационный портал здравоохранения Липецкой области"
+              title="Информационный портал здравоохранения Липецкой области"
+              src="{% static 'home/images/gos-lip-med.png' %}">
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </section>
+  <!-- end: PORTALS -->
+{% endblock %}

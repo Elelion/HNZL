@@ -40,14 +40,10 @@
         <div class="col-lg-6">
           <h4>Список пациентов ХОБЛ / ХНЗЛ</h4>
           <p>
-            Всего пациентов: <b>{{ COPDPatients.count }}</b>
-            {% if current_url in request.path %}
-              , из них:<br>
-
-              {% for key, val in patients_status_counts.items %}
+            Всего пациентов: <b>{{ patients_count }}</b>, из них:<br>
+              {% for key, val in patients_dispensary.items %}
                 {{ key }}: <b>{{ val }}</b>;
               {% endfor %}
-            {% endif %}
           <p>
         </div>
 
@@ -81,7 +77,7 @@
                       <li><hr class="space"></li>
                     {% endif %}
 
-                    <li><a href="{% url "patients:browse" %}"><i class="icon-refresh-cw"></i>Обновить БД</a></li>
+                    <li><a href="{% url "patients:browse" page=1 %}"><i class="icon-refresh-cw"></i>Обновить БД</a></li>
                   </ul>
                 </div>
               </div>
@@ -134,7 +130,9 @@
                         {% elif patient.dispensary_observation_status == "3" %}
                           bg-danger
                         {% endif %}
-                    ">{{ patient.get_dispensary_observation_status_display }}</span>
+                    ">
+                      {{ patient.get_dispensary_observation_status_display }}
+                    </span>
                   </td>
 
                   <!-- control buttons: begin -->
@@ -171,7 +169,7 @@
                 </tr>
 
                 <!-- modal pre-view for current patient: begin -->
-                {% include 'patients/template_view.html' with patient=patient %}
+                {% include 'patients/template_fast_view.html' with patient=patient %}
                 <!-- modal pre-view for current patient: end -->
               {% endfor %}
             </tbody>
@@ -179,66 +177,68 @@
           <!-- patients_list: end -->
 
           <!-- paginator: begin -->
-          <nav>
-            <ul class="pagination justify-content-center">
+          {% if is_paginated %}
+            <nav>
+              <ul class="pagination justify-content-center">
 
-              <!-- назад -->
-              <li class="page-item {% if not COPDPatients.has_previous %} disabled {% endif %}">
-                <a class="page-link"
-                  href=" {% if COPDPatients.has_previous %}{% url 'patients:paginator' COPDPatients.previous_page_number %}{% else %}#{% endif %}"
-                  tabindex="-1" aria-disabled="true"
-                >
-                  <i class="fa fa-angle-left"></i>
-                </a>
-              </li>
-
-              {% if COPDPatients.number > 3 %}
-                <!-- всегда первая страница -->
-                <li class="page-item">
-                  <a class="page-link" href="{% url 'patients:paginator' 1 %}">1</a>
+                <!-- назад -->
+                <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+                  <a class="page-link"
+                    href=" {% if page_obj.has_previous %}{% url 'patients:browse' page_obj.previous_page_number %}{% else %}#{% endif %}"
+                    tabindex="-1" aria-disabled="true"
+                  >
+                    <i class="fa fa-angle-left"></i>
+                  </a>
                 </li>
 
-                <!-- прочие страницы -->
-                <li class="page-item disabled">
-                  <span class="page-link">...</span>
-                </li>
-              {% endif %}
+                {% if page_obj.number > 3 %}
+                  <!-- всегда первая страница -->
+                  <li class="page-item">
+                    <a class="page-link" href="{% url 'patients:browse' 1 %}">1</a>
+                  </li>
 
-              <!-- перебираем все страницы пагинации -->
-              {% for page in COPDPatients.paginator.page_range %}
-                <!-- текущая стр > текущая стр - 3 И текущ стр < текущ стр + 3, ТО... -->
-                {% if page > COPDPatients.number|add:'-3' and page < COPDPatients.number|add:'3' %}
-                  <li class="page-item {% if page == COPDPatients.number %} active {% endif %}">
-                    <a class="page-link" href="{% url 'patients:paginator' page %}">
-                      {{ page }}
+                  <!-- прочие страницы -->
+                  <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                  </li>
+                {% endif %}
+
+                <!-- перебираем все страницы пагинации -->
+                {% for page in page_obj.paginator.page_range %}
+                  <!-- текущая стр > текущая стр - 3 И текущ стр < текущ стр + 3, ТО... -->
+                  {% if page > page_obj.number|add:'-3' and page < page_obj.number|add:'3' %}
+                    <li class="page-item {% if page == page_obj.number %} active {% endif %}">
+                      <a class="page-link" href="{% url 'patients:browse' page %}">
+                        {{ page }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if page_obj.paginator.num_pages > page_obj.number|add:'3' %}
+                  <!-- прочие страницы -->
+                  <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                  </li>
+
+                  <!-- всегда последняя страница -->
+                  <li class="page-item">
+                    <a class="page-link" href="{% url 'patients:browse' page_obj.paginator.num_pages %}">
+                      {{ page_obj.paginator.num_pages }}
                     </a>
                   </li>
                 {% endif %}
-              {% endfor %}
 
-              {% if COPDPatients.paginator.num_pages > COPDPatients.number|add:'3' %}
-                <!-- прочие страницы -->
-                <li class="page-item disabled">
-                  <span class="page-link">...</span>
-                </li>
-
-                <!-- всегда последняя страница -->
-                <li class="page-item">
-                  <a class="page-link" href="{% url 'patients:paginator' COPDPatients.paginator.num_pages %}">
-                    {{ COPDPatients.paginator.num_pages }}
+                <!-- вперед -->
+                <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
+                  <a class="page-link" href="{% if page_obj.has_next %}{% url 'patients:browse' page_obj.next_page_number %}{% else %}#{% endif %}">
+                    <i class="fa fa-angle-right"></i>
                   </a>
                 </li>
-              {% endif %}
 
-              <!-- вперед -->
-              <li class="page-item {% if not COPDPatients.has_next %} disabled {% endif %}">
-                <a class="page-link" href="{% if COPDPatients.has_next %}{% url 'patients:paginator' COPDPatients.next_page_number %}{% else %}#{% endif %}">
-                  <i class="fa fa-angle-right"></i>
-                </a>
-              </li>
-
-            </ul>
+              </ul>
           </nav>
+          {% endif %}
           <!-- paginator: end -->
 
         </div>

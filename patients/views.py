@@ -1,43 +1,106 @@
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
+from django.views.generic import ListView
 from patients.forms import PatientAddForm, PatientEditForm
 from patients.models import COPDPatients
 from django.contrib import messages
 from patients.models_choices import DISPENSARY_OBSERVATION_STATUS
 
 
-@login_required
-def browse(request, page_number=1):
-    current_site = request.get_host()
+class PatientsListView(ListView):
+    model = COPDPatients
+    context_object_name = 'COPDPatients'
+    paginate_by = 10
+    template_name = 'patients/browse.html'
 
-    breadcrumb_data = [
-        {'label': current_site, 'url': current_site},
-        {'label': 'Пациенты', 'url': '#'},
-    ]
+    current_date = datetime.now().date()
+    date_ago = current_date - timedelta(days=6*30)
 
-    patients_status_counts = {}
-    for key, val in DISPENSARY_OBSERVATION_STATUS:
-        patients_status_counts[val] = COPDPatients.objects.filter(
-            dispensary_observation_status=key).count()
+    def get_queryset(self):
+        """get_queryset родительского класса"""
+        queryset = super(PatientsListView, self).get_queryset()
+        return queryset
 
-    patients = COPDPatients.objects.all()
-    items_per_page = 10
-    paginator = Paginator(patients, items_per_page)
-    patients_paginator = paginator.page(page_number)
+    def get_dispensary_patients_count(self, dispensary=False):
+        dispensary_counts = {}
 
-    # **
+        for key, val in DISPENSARY_OBSERVATION_STATUS:
+            queryset = self.model.objects.filter(dispensary_observation_status=key)
 
-    context = {
-        'breadcrumb_data': breadcrumb_data,
-        'COPDPatients': patients_paginator,
-        'patients_status_counts': patients_status_counts,
-        'current_url': request.path,
-    }
+            if dispensary:
+                queryset = queryset.filter(
+                    dispensary_observation_date_status__lt=self.date_ago,
+                    dispensary_observation_status=key
+                )
 
-    return render(request, 'patients/browse.html', context)
+            dispensary_counts[val] = queryset.count()
+
+        return dispensary_counts
+
+    # аналогично выражению ниже
+    # current_date = datetime.now().date()
+    # date_ago = current_date - timedelta(days=6*30)
+    # patients = COPDPatients.objects.filter(dispensary_observation_date_status__lt=date_ago)
+    def get_alert_dispensary_patients(self):
+        patients = self.get_queryset()
+        dispensary_alert = False
+
+        for patient in patients:
+            # Получаем разницу между текущей датой и датой наблюдения пациента
+            difference = self.current_date - patient.dispensary_observation_date_status
+
+            # Если хотя бы у одного пациента разница больше 6 месяцев...
+            if difference > timedelta(days=6*30):
+                dispensary_alert = True
+                break
+
+        return dispensary_alert
+
+
+class BrowseListView(PatientsListView):
+    def get_context_data(self, **kwargs):
+        context = super(BrowseListView, self).get_context_data()
+
+        current_site = self.request.get_host()
+        breadcrumb_data = [
+            {'label': current_site, 'url': current_site},
+            {'label': 'Пациенты', 'url': '#'},
+        ]
+
+        # **
+
+        context['breadcrumb_data'] = breadcrumb_data
+        context['patients_count'] = self.get_queryset().count()
+        context['patients_dispensary'] = self.get_dispensary_patients_count()
+        context['dispensary_alert'] = self.get_alert_dispensary_patients()
+        return context
+
+
+class DispensaryListView(PatientsListView):
+    def get_queryset(self):
+        """get_queryset перегруженный в классе DispensaryListView"""
+        queryset = super(DispensaryListView, self).get_queryset()
+        return queryset.filter(dispensary_observation_date_status__lt=self.date_ago)
+
+    def get_context_data(self, **kwargs):
+        context = super(DispensaryListView, self).get_context_data()
+
+        current_site = self.request.get_host()
+        breadcrumb_data = [
+            {'label': current_site, 'url': current_site},
+            {'label': 'Диспансеризация', 'url': '#'},
+        ]
+
+        # **
+
+        context['breadcrumb_data'] = breadcrumb_data
+        context['patients_count'] = self.get_queryset().count()
+        context['patients_dispensary'] = self.get_dispensary_patients_count(True)
+        context['dispensary_alert'] = self.get_alert_dispensary_patients()
+        return context
 
 
 @login_required()
@@ -61,7 +124,7 @@ def search(request):
     context = {
         'breadcrumb_data': breadcrumb_data,
         'COPDPatients': results,
-        'patients_status_counts': results.count(),
+        'patients_dispensary': results.count(),
         'current_url': request.path,
     }
 

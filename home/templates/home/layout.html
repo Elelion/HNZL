@@ -1,0 +1,204 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="ХОБЛ" content="Липецкая городская поликлиника №2" />
+  <meta name="ХОБЛ" content="ХОБЛ - пациенты">
+  <link rel="icon" type="image/png" href="{% static 'home/images/logo.png' %}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Document title -->
+  <title>{% block title %}{% endblock %}</title>
+
+  <!-- Stylesheets & Fonts -->
+  <link href="{% static 'public/css/plugins.css' %}" rel="stylesheet">
+  <link href="{% static 'public/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'home/css/home.css' %}" rel="stylesheet">
+</head>
+
+<body class="side-panel side-panel-static">
+
+    <!-- Side Panel -->
+    <div id="side-panel" class="text-center dark">
+        <div id="close-panel">
+            <i class="fa fa-times"></i>
+        </div>
+
+        <div class="side-panel-wrap">
+            <div class="logo">
+                <a href="{% url 'home:index' %}">
+                  <img src="{% static 'home/images/logo.png' %}" style="width:80px; height:100px;">
+                </a>
+            </div>
+            <hr class="space">
+
+            <!--Navigation-->
+            <div id="mainMenu" class="menu-onclick menu-vertical">
+                <div class="container">
+                    {% include 'home/template_menu.html' %}
+                </div>
+            </div>
+            <!--end: Navigation-->
+
+
+            <hr class="space">
+            <hr class="space">
+            <!--social icons-->
+            <div class="social-icons social-icons-colored text-center">
+                <ul>
+{#                    <li class="social-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>#}
+{#                    <li class="social-twitter"><a href="#"><i class="fab fa-twitter"></i></a></li>#}
+{#                    <li class="social-google"><a href="#"><i class="fab fa-google-plus-g"></i></a></li>#}
+{#                    <li class="social-pinterest"><a href="#"><i class="fab fa-pinterest"></i></a></li>#}
+
+                    <li class="social-vimeo"><a href="https://vk.com/club130729996" target="_blank"><i class="fab fa-vk"></i></a></li>
+                </ul>
+            </div>
+            <!--end: social icons-->
+
+            <!--copyright text-->
+            <p class="small">© 2023 ГУЗ Липецкая городская поликлиника №2</p>
+            <!--end: copyright text-->
+        </div>
+
+    </div>
+    <!-- end: Side Panel -->
+
+    <!-- Body Inner -->
+    <div class="body-inner">
+
+        <!-- Header -->
+        <header id="header" class="d-block d-md-none dark" data-transparent="true">
+
+            <div class="header-inner">
+                <div class="container">
+                    <!--Header Extras-->
+                    <div class="header-extras">
+                        <ul>
+                            <li>
+                                <!--side panel-->
+                                <a id="side-panel-trigger" href="#" class="toggle-item" data-target="body" data-class="side-panel-active">
+                                    <i class="fa fa-bars"></i>
+                                    <i class="fa fa-times"></i>
+                                </a>
+                                <!--end: side panel-->
+                            </li>
+                        </ul>
+                    </div>
+                    <!--end: Header Extras-->
+
+                </div>
+            </div>
+        </header>
+        <!-- end: Header -->
+
+        <!-- Page Content -->
+        {% block content %}{% endblock %}
+        <!-- end: Page Content -->
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="footer-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="widget">
+                                <div class="widget-title">ХОБЛ / ХНЗЛ</div>
+                                <p class="mb-5">Данные для регистра ХОБЛ<br> Все права защищены. Copyright © 2023</p>
+                                <a href="http://lip2.ru"
+                                   class="btn btn-inverted"
+                                   target="_blank"
+                                >Перейти на сайт поликлиники №2</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="widget">
+                                        <div class="widget-title">Главная</div>
+                                        <ul class="list">
+                                            <li><a href="{% url 'home:client_questions' %}">Оценка здоровья</a></li>
+                                            <li><a href="{% url 'authorization:login' %}">Для персонала</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!--
+                                <div class="col-lg-3">
+                                    <div class="widget">
+                                        <div class="widget-title">Информация</div>
+                                        <ul class="list">
+                                            <li><a href="#">1</a></li>
+                                            <li><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#">4</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                -->
+
+                                <!--
+                                <div class="col-lg-3">
+                                    <div class="widget">
+                                        <div class="widget-title">Pages</div>
+                                        <ul class="list">
+                                            <li><a href="#">Portfolio</a></li>
+                                            <li><a href="#">Blog</a></li>
+                                            <li><a href="#">Shop</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                -->
+
+                                <!--
+                                <div class="col-lg-3">
+                                    <div class="widget">
+                                        <div class="widget-title">Support</div>
+                                        <ul class="list">
+                                            <li><a href="#">Help Desk</a></li>
+                                            <li><a href="#">Documentation</a></li>
+                                            <li><a href="#">Contact Us</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="copyright-content">
+                <div class="container">
+                    <div class="copyright-text text-center">&copy; 2021 POLO - Responsive Multi-Purpose HTML5 Template. All Rights Reserved.<a href="https://www.inspiro-media.com" target="_blank" rel="noopener"> INSPIRO</a> </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end: Footer -->
+
+    </div>
+    <!-- end: Body Inner -->
+
+    <!-- Scroll top -->
+    <a id="scrollTop"><i class="icon-chevron-up"></i><i class="icon-chevron-up"></i></a>
+
+    <!--Plugins-->
+    <script src="{% static 'public/js/jquery.js' %}"></script>
+    <script src="{% static 'public/js/plugins.js' %}"></script>
+
+    <!--Template functions-->
+    <script src="{% static 'public/js/functions.js' %}"></script>
+
+    <!--Feedback mask for phone-->
+    <script type='text/javascript'
+            src="{% static 'home/js/imask-feedback.js' %}"
+            id='e-sticky-js'>
+    </script>
+</body>
+
+</html>

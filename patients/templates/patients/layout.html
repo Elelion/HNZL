@@ -6,12 +6,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="author" content="INSPIRO" />
-    <meta name="description" content="ХОБЛ - пациенты">
-    <link rel="icon" type="image/png" src="{% static 'login/images/favicon.png' %}">
+    <meta name="ХОБЛ" content="Липецкая городская поликлиника №2" />
+    <meta name="ХОБЛ" content="ХОБЛ - пациенты">
+    <link rel="icon" type="image/png" href="{% static 'login/images/favicon.png' %}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Document title -->
 
+    <!-- Document title -->
     <title>{% block title %}{% endblock %}</title>
 
     <!-- Stylesheets & Fonts -->
@@ -39,7 +39,7 @@
                 <div class="container">
                     <!--Logo-->
                     <div id="logo">
-                        <a href="{% url 'patients:browse' %}">
+                        <a href="{% url 'home:index' %}">
                             <span class="logo-default">ХОБЛ</span>
                             <span class="logo-dark">ХОБЛ</span>
                         </a>
@@ -62,6 +62,14 @@
                                             <li><a href="{% url 'patients:add' %}">Добавить</a></li>
                                         </ul>
                                     </li>
+                                    {% if dispensary_alert %}
+                                      <li class="dropdown">
+                                        <a href="{% url 'patients:dispensary' %}">
+                                            Диспансеризация
+                                            <span class="badge bg-danger">Сроки!</span>
+                                        </a>
+                                      </li>
+                                    {% endif %}
 
                                     <!--
                                     <li class="dropdown"><a href="#">Features</a>
@@ -87,7 +95,7 @@
                                     {% endif %}
 
                                     <li>
-                                        <a href="{% url 'logout' %}"><span>Выход</span></a>
+                                        <a href="{% url 'authorization:logout' %}"><span>Выход</span></a>
                                     </li>
                                 </ul>
                             </nav>
@@ -150,9 +158,9 @@
                             <div class="widget">
                                 <div class="widget-title">ХОБЛ / ХНЗЛ</div>
                                 <p class="mb-5">Данные для регистра ХОБЛ<br> Все права защищены. Copyright © 2023</p>
-                                <a href="#"
+                                <a href="http://lip2.ru"
                                    class="btn btn-inverted"
-                                  {# target="_blank"#}
+                                   target="_blank"
                                 >Перейти на сайт поликлиники</a>
                             </div>
                         </div>

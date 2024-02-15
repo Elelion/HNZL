@@ -21,9 +21,11 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', include('login.urls')),
+    path('', include('home.urls', namespace='home')),
+    path('authorization/', include('authorization.urls', namespace='authorization')),
     path('patients/', include('patients.urls', namespace='patients')),
 
+    # TODO: сделать редирект на 404
     # Перенаправление всех несуществующих URL на главную страницу
     path('<path:invalid_path>', RedirectView.as_view(url='/', permanent=False)),
 ]

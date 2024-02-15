@@ -42,7 +42,6 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -51,7 +50,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "login",
+    "home",
+    "authorization",
     "patients",
 ]
 
@@ -70,7 +70,13 @@ ROOT_URLCONF = "Project_Dj_hnzlru.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates']
+        "DIRS": [
+            # str(BASE_DIR / 'templates'),  # основная директория шаблонов
+            BASE_DIR / 'templates',  # основная директория шаблонов
+            # os.path.join(BASE_DIR, 'home/templates'),
+            # os.path.join(BASE_DIR, 'login/templates'),
+            # os.path.join(BASE_DIR, 'patients/templates'),
+        ]
         ,
         "APP_DIRS": True,
         "OPTIONS": {
@@ -128,7 +134,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+
 # **
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -138,13 +146,16 @@ STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'home', 'static/home'),
     os.path.join(BASE_DIR, 'login', 'static/login'),
     os.path.join(BASE_DIR, 'patients', 'static/patients'),
 ]
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+
 # **
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -156,3 +167,16 @@ LOGIN_REDIRECT_URL = "/patients/index/"
 
 # при разлогинивании
 LOGOUT_REDIRECT_URL = "/"
+
+
+# **
+
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_RECIPIENT_1 = os.getenv('EMAIL_RECIPIENT_1')
